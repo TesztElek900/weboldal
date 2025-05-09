@@ -9,7 +9,7 @@
     <h1>autoGyak</h1>
     <br>
     <h3>Program.cs</h3>
-    <p> ﻿using System;
+    <p>using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,7 +51,7 @@ namespace autokGyak
         <h1>AutoLibrary</h1>
         <br>
         <h3>auto.cs</h3>
-        <p>﻿using System;
+        <p> using System;
             using System.Collections.Generic;
             using System.Linq;
             using System.Text;
@@ -92,9 +92,9 @@ namespace autokGyak
             
             
             
-                    public static List<auto> OpenFiles(string filenev)
+                    public static List < auto > OpenFiles(string filenev)
                     {
-                        List<auto> autoList = new List<auto>();
+                        List < auto > autoList = new List < auto >();
             
                         if (!File.Exists(filenev))
                             return autoList;
@@ -125,10 +125,10 @@ namespace autokGyak
                 }
             }</p>
             <br>
-        <h3>autoGyakWPF</h3>
+        <h1>autoGyakWPF</h1>
         <br>
-        <h1>MainWindow.xaml.cs</h1>
-        <p>﻿using System;
+        <h3>MainWindow.xaml.cs</h3>
+        <p> using System;
             using System.Collections.Generic;
             using System.Linq;
             using System.Text;
@@ -155,7 +155,7 @@ namespace autokGyak
                 public partial class MainWindow : Window
                 {
                     string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Data\autok.csv");
-                    List<auto> autok = new List<auto>();
+                    List < auto > autok = new List < auto >();
                     public MainWindow()
                     {
                         InitializeComponent();
@@ -328,6 +328,112 @@ namespace autokGyak
                     }
                 }
             }</p>
+            <br>
+            <h1>BASIC URLAP</h1>
+            <br>
+            <h3>index.html</h3>
+            <p>
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>Kódrészlet megjelenítése</title>
+</head>
+<body>
+  <h2>Kódrészlet (nem értelmezett HTML-ként):</h2>
+  <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+        &lt;title&gt;Javascript - Űrlap adatok kezelése&lt;/title&gt;
+        &lt;style&gt;
+            .form-container {
+                width: 400px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 50px;
+            }
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                padding: 5px 10px;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class="form-container"&gt;
+            ...
+        &lt;/div&gt;
+        &lt;script src="form.js"&gt;&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+  </pre>
+</body>
+</html>
+</p>
+<br>
+<h3>form.js</h3>
+<p>let nextId = 1;
+
+function rendeles(event) {
+    event.preventDefault();
+    
+    let inputvezeteknev = document.querySelector("input[name='vezeteknev']");
+    let inputkeresztnev = document.querySelector("input[name='keresztnev']");
+    let inputemailcim = document.querySelector("input[name='email']");
+    let inputtelefonszam = document.querySelector("input[name='telefonszam']");
+    
+    let megrendeloError = document.getElementById("megrendeloError");
+    if (!megrendeloError) {
+        megrendeloError = document.createElement("div");
+        megrendeloError.id = "megrendeloError";
+        megrendeloError.style.color = "red";
+        document.getElementById("userForm").appendChild(megrendeloError);
+    }
+
+    if(inputvezeteknev.value == "" || inputkeresztnev.value == "" || inputemailcim.value == "" || inputtelefonszam.value == "") {
+        megrendeloError.innerHTML = "Hiányzó felhasználói adatok!";
+    } 
+    else {
+        const tableBody = document.querySelector("tbody");
+        
+        const newRow = document.createElement("tr");
+        
+        newRow.setAttribute("data-id", nextId);
+        
+        newRow.innerHTML = `
+            < td >${nextId}< /td >
+            < td >${inputvezeteknev.value}< /td >
+            < td >${inputkeresztnev.value}< /td >
+            < td >${inputemailcim.value}< /td >
+            < td >${inputtelefonszam.value}< /td >
+        `;
+        
+        tableBody.appendChild(newRow);
+        
+        nextId++;
+
+        document.getElementById("userForm").reset();
+        
+        megrendeloError.innerHTML = "";
+    }
+}
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("userForm");
+    form.addEventListener("submit", rendeles);
+    
+    const headerRow = document.querySelector("thead tr");
+    const idHeader = document.createElement("th");
+    idHeader.textContent = "ID";
+    headerRow.insertBefore(idHeader, headerRow.firstChild);
+    
+    const tableBody = document.querySelector("tbody");
+    tableBody.innerHTML = "";
+});
+</p>
+
 
 
 
