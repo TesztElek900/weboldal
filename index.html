@@ -9,41 +9,44 @@
     <h1>autoGyak</h1>
     <br>
     <h3>Program.cs</h3>
-    <p> using System;
-        using System.Collections.Generic;
-        using System.Linq;
-        using System.Text;
-        using System.Threading.Tasks;
-        using AutoLibrary;
-        
-        namespace autokGyak
+    <p> ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AutoLibrary;
+using System.IO;
+using Path = System.IO.Path;
+
+namespace autokGyak
+{
+    internal class Program
+    {
+        static void Main(string[] args)
         {
-            internal class Program
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Data\autok.csv");
+            auto a = new auto(0, "", "", 0, "", 0, 0);
+            foreach (auto arg in auto.OpenFiles(filePath))
             {
-                static void Main(string[] args)
+                Console.WriteLine(arg.Modell1);
+            }
+
+            
+            string oldMarka = "";
+            int kor = auto.OpenFiles(filePath)[0].Gyártásiev1;
+            foreach (auto arg in auto.OpenFiles(filePath))
+            {
+                if (arg.Gyártásiev1 < kor)
                 {
-                    auto a = new auto(0, "", "", 0, "", 0, 0);
-                    foreach (auto arg in auto.OpenFiles("autok.csv"))
-                    {
-                        Console.WriteLine(arg.Modell1);
-                    }
-        
-                    
-                    string oldMarka = "";
-                    int kor = auto.OpenFiles("autok.csv")[0].Gyártásiev1;
-                    foreach (auto arg in auto.OpenFiles("autok.csv"))
-                    {
-                        if (arg.Gyártásiev1 < kor)
-                        {
-                            kor = arg.Gyártásiev1;
-                            oldMarka = arg.Marka1;
-                        }
-                    }
-                    Console.WriteLine();
-                    Console.WriteLine("{0} A legidősebb autó: {1}",kor, oldMarka);
+                    kor = arg.Gyártásiev1;
+                    oldMarka = arg.Marka1;
                 }
             }
-        }</p>
+            Console.WriteLine();
+            Console.WriteLine("{0} A legidősebb autó: {1}",kor, oldMarka);
+        }
+    }
+}</p>
         <br>
         <h1>AutoLibrary</h1>
         <br>
