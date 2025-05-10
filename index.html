@@ -4,12 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        pre {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        h1, h3 {
+            color: #333;
+            margin-top: 30px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
     <h1>autoGyak</h1>
-    <br>
     <h3>Program.cs</h3>
-    <p>using System;
+    <pre>
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,302 +67,297 @@ namespace autokGyak
             Console.WriteLine("{0} A legidősebb autó: {1}",kor, oldMarka);
         }
     }
-}</p>
-        <br>
-        <h1>AutoLibrary</h1>
-        <br>
-        <h3>auto.cs</h3>
-        <p> using System;
-            using System.Collections.Generic;
-            using System.Linq;
-            using System.Text;
-            using System.Threading.Tasks;
-            using System.IO;
-            using System.Net.Http.Headers;
+}
+    </pre>
+
+    <h1>AutoLibrary</h1>
+    <h3>auto.cs</h3>
+    <pre>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Net.Http.Headers;
             
-            namespace AutoLibrary
+namespace AutoLibrary
+{
+    public class auto
+    {
+        public int Id;
+        public string Marka;
+        public string Modell;
+        public int Gyártásiev;
+        public string Szin;
+        public int EladottDb;
+        public int AvgEladasAr;
+            
+        public auto(int id, string marka, string modell, int gyártásiev, string szin, int eladottDb, int avgEladasAr)
+        {
+            Id = id;
+            Marka = marka;
+            Modell = modell;
+            Gyártásiev = gyártásiev;
+            Szin = szin;
+            EladottDb = eladottDb;
+            AvgEladasAr = avgEladasAr;
+        }
+            
+        public int Id1 { get => Id; set => Id = value; }
+        public string Marka1 { get => Marka; set => Marka = value; }
+        public string Modell1 { get => Modell; set => Modell = value; }
+        public int Gyártásiev1 { get => Gyártásiev; set => Gyártásiev = value; }
+        public string Szin1 { get => Szin; set => Szin = value; }
+        public int EladottDb1 { get => EladottDb; set => EladottDb = value; }
+        public int AvgEladasAr1 { get => AvgEladasAr; set => AvgEladasAr = value; }
+            
+            
+            
+        public static List&lt;auto&gt; OpenFiles(string filenev)
+        {
+            List&lt;auto&gt; autoList = new List&lt;auto&gt;();
+            
+            if (!File.Exists(filenev))
+                return autoList;
+            
+            string[] sorok = File.ReadAllLines(filenev);
+            
+            for (int i = 1; i < sorok.Length; i++) // fejléct kihagyva
             {
-                public class auto
+                string[] mezok = sorok[i].Split(';');
+            
+                if (mezok.Length != 7)
+                    continue; // hibás sor: nem 7 mező
+            
+                if (
+                    int.TryParse(mezok[0], out int id) &&
+                    int.TryParse(mezok[3], out int ev) &&
+                    int.TryParse(mezok[5], out int eladasDb) &&
+                    int.TryParse(mezok[6], out int ar)
+                )
                 {
-                  public int Id;
-                   public string Marka;
-                   public string Modell;
-                   public int Gyártásiev;
-                   public string Szin;
-                   public int EladottDb;
-                    public int AvgEladasAr;
-            
-                    public auto(int id, string marka, string modell, int gyártásiev, string szin, int eladottDb, int avgEladasAr)
-                    {
-                        Id = id;
-                        Marka = marka;
-                        Modell = modell;
-                        Gyártásiev = gyártásiev;
-                        Szin = szin;
-                        EladottDb = eladottDb;
-                        AvgEladasAr = avgEladasAr;
-                    }
-            
-                    public int Id1 { get => Id; set => Id = value; }
-                    public string Marka1 { get => Marka; set => Marka = value; }
-                    public string Modell1 { get => Modell; set => Modell = value; }
-                    public int Gyártásiev1 { get => Gyártásiev; set => Gyártásiev = value; }
-                    public string Szin1 { get => Szin; set => Szin = value; }
-                    public int EladottDb1 { get => EladottDb; set => EladottDb = value; }
-                    public int AvgEladasAr1 { get => AvgEladasAr; set => AvgEladasAr = value; }
-            
-            
-            
-                    public static List < auto > OpenFiles(string filenev)
-                    {
-                        List < auto > autoList = new List < auto >();
-            
-                        if (!File.Exists(filenev))
-                            return autoList;
-            
-                        string[] sorok = File.ReadAllLines(filenev);
-            
-                        for (int i = 1; i < sorok.Length; i++) // fejléct kihagyva
-                        {
-                            string[] mezok = sorok[i].Split(';');
-            
-                            if (mezok.Length != 7)
-                                continue; // hibás sor: nem 7 mező
-            
-                            if (
-                                int.TryParse(mezok[0], out int id) &&
-                                int.TryParse(mezok[3], out int ev) &&
-                                int.TryParse(mezok[5], out int eladasDb) &&
-                                int.TryParse(mezok[6], out int ar)
-                            )
-                            {
-                            auto a = new auto(id, mezok[1], mezok[2], ev, mezok[4], eladasDb, ar);
-                            autoList.Add(a);
-                        }
-                    }
-            
-                        return autoList;
-                    }
+                    auto a = new auto(id, mezok[1], mezok[2], ev, mezok[4], eladasDb, ar);
+                    autoList.Add(a);
                 }
-            }</p>
-            <br>
-        <h1>autoGyakWPF</h1>
-        <br>
-        <h3>MainWindow.xaml.cs</h3>
-        <p> using System;
-            using System.Collections.Generic;
-            using System.Linq;
-            using System.Text;
-            using System.Threading.Tasks;
-            using System.Windows;
-            using System.Windows.Controls;
-            using System.Windows.Data;
-            using System.Windows.Documents;
-            using System.Windows.Input;
-            using System.Windows.Media;
-            using System.Windows.Media.Imaging;
-            using System.Windows.Navigation;
-            using System.Windows.Shapes;
-            using autokGyak;
-            using AutoLibrary;
-            using System.IO;
-            using Path = System.IO.Path;
+            }
             
-            namespace autokGyakWPF
+            return autoList;
+        }
+    }
+}
+    </pre>
+
+    <h1>autoGyakWPF</h1>
+    <h3>MainWindow.xaml.cs</h3>
+    <pre>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using autokGyak;
+using AutoLibrary;
+using System.IO;
+using Path = System.IO.Path;
+            
+namespace autokGyakWPF
+{
+    /// &lt;summary&gt;
+    /// Interaction logic for MainWindow.xaml
+    /// &lt;/summary&gt;
+    public partial class MainWindow : Window
+    {
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Data\autok.csv");
+        List&lt;auto&gt; autok = new List&lt;auto&gt;();
+        public MainWindow()
+        {
+            InitializeComponent();
+            auto a = new auto(0, "", "", 0, "", 0, 0);
+            autok = auto.OpenFiles(filePath);
+            AutoLista.ItemsSource = autok;
+        }
+            
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            autok = auto.OpenFiles(filePath);
+            if (!string.IsNullOrEmpty(tbIdKeres.Text))
+                autok = autok.Where(a => a.Id.ToString().Equals(tbIdKeres.Text)).ToList();
+            
+            if (!string.IsNullOrEmpty(tbMarkaKeres.Text))
+                autok = autok.Where(a => a.Marka.ToLower().Contains(tbMarkaKeres.Text.ToLower())).ToList();
+            
+            AutoLista.ItemsSource = autok;
+        }
+            
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            UjAutoWindow ujAblak = new UjAutoWindow();
+            ujAblak.ShowDialog();
+            
+            AutoLista.ItemsSource = auto.OpenFiles(filePath);
+        }
+            
+        private void AutoLista_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (AutoLista.SelectedItem is auto kivalasztott)
             {
-                /// <summary>
-                /// Interaction logic for MainWindow.xaml
-                /// </summary>
-                public partial class MainWindow : Window
+                tbMarka.Text = kivalasztott.Marka;
+                tbModell.Text = kivalasztott.Modell;
+                tbEv.Text = kivalasztott.Gyártásiev.ToString();
+                tbSzin.Text = kivalasztott.Szin;
+                tbDB.Text = kivalasztott.EladottDb.ToString();
+                tbAr.Text = kivalasztott.AvgEladasAr.ToString();
+            }
+        }
+            
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            if (AutoLista.SelectedItem is auto kivalasztott)
+            {
+                try
                 {
+                    // Frissítjük a kiválasztott autó adatait
+                    kivalasztott.Marka = tbMarka.Text;
+                    kivalasztott.Modell = tbModell.Text;
+                    kivalasztott.Gyártásiev = int.Parse(tbEv.Text);
+                    kivalasztott.Szin = tbSzin.Text;
+                    kivalasztott.EladottDb = int.Parse(tbDB.Text);
+                    kivalasztott.AvgEladasAr = int.Parse(tbAr.Text);
+            
+                    // CSV fájl újraírása
                     string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Data\autok.csv");
-                    List < auto > autok = new List < auto >();
-                    public MainWindow()
+                    using (StreamWriter sw = new StreamWriter(filePath, false, Encoding.UTF8))
                     {
-                        InitializeComponent();
-                        auto a = new auto(0, "", "", 0, "", 0, 0);
-                        autok = auto.OpenFiles(filePath);
-                        AutoLista.ItemsSource = autok;
-                    }
-            
-                    private void Button_Click(object sender, RoutedEventArgs e)
-                    {
-                        autok = auto.OpenFiles(filePath);
-                        if (!string.IsNullOrEmpty(tbIdKeres.Text))
-                            autok = autok.Where(a => a.Id.ToString().Equals(tbIdKeres.Text)).ToList();
-            
-                        if (!string.IsNullOrEmpty(tbMarkaKeres.Text))
-                            autok = autok.Where(a => a.Marka.ToLower().Contains(tbMarkaKeres.Text.ToLower())).ToList();
-            
-                        AutoLista.ItemsSource = autok;
-                    }
-            
-                    private void Button_Click_1(object sender, RoutedEventArgs e)
-                    {
-                        UjAutoWindow ujAblak = new UjAutoWindow();
-                        ujAblak.ShowDialog();
-            
-                        AutoLista.ItemsSource = auto.OpenFiles(filePath);
-                    }
-            
-                    private void AutoLista_SelectionChanged(object sender, SelectionChangedEventArgs e)
-                    {
-                        if (AutoLista.SelectedItem is auto kivalasztott)
+                        sw.WriteLine("id;marka;modell;ev;szin;db;ar"); // fejléc
+                        foreach (var auto in autok)
                         {
-                            tbMarka.Text = kivalasztott.Marka;
-                            tbModell.Text = kivalasztott.Modell;
-                            tbEv.Text = kivalasztott.Gyártásiev.ToString();
-                            tbSzin.Text = kivalasztott.Szin;
-                            tbDB.Text = kivalasztott.EladottDb.ToString();
-                            tbAr.Text = kivalasztott.AvgEladasAr.ToString();
+                            string sor = $"{auto.Id1};{auto.Marka1};{auto.Modell1};{auto.Gyártásiev1};{auto.Szin1};{auto.EladottDb1};{auto.AvgEladasAr1}";
+                            sw.WriteLine(sor);
                         }
                     }
             
-                    private void Button_Click_2(object sender, RoutedEventArgs e)
-                    {
-                        if (AutoLista.SelectedItem is auto kivalasztott)
-                        {
-                            try
-                            {
-                                // Frissítjük a kiválasztott autó adatait
-                                kivalasztott.Marka = tbMarka.Text;
-                                kivalasztott.Modell = tbModell.Text;
-                                kivalasztott.Gyártásiev = int.Parse(tbEv.Text);
-                                kivalasztott.Szin = tbSzin.Text;
-                                kivalasztott.EladottDb = int.Parse(tbDB.Text);
-                                kivalasztott.AvgEladasAr = int.Parse(tbAr.Text);
+                    MessageBox.Show("Sikeresen mentve!");
             
-                                // CSV fájl újraírása
-                                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Data\autok.csv");
-                                using (StreamWriter sw = new StreamWriter(filePath, false, Encoding.UTF8))
-                                {
-                                    sw.WriteLine("id;marka;modell;ev;szin;db;ar"); // fejléc
-                                    foreach (var auto in autok)
-                                    {
-                                        string sor = $"{auto.Id1};{auto.Marka1};{auto.Modell1};{auto.Gyártásiev1};{auto.Szin1};{auto.EladottDb1};{auto.AvgEladasAr1}";
-                                        sw.WriteLine(sor);
-                                    }
-                                }
-            
-                                MessageBox.Show("Sikeresen mentve!");
-            
-                                AutoLista.Items.Refresh(); // UI frissítése
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show("Hiba mentés közben: " + ex.Message);
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Nincs kiválasztva autó a mentéshez!");
-                        }
-                    }
-            
-                    private void Button_Click_3(object sender, RoutedEventArgs e)
-                    {
-                        if (AutoLista.SelectedItem is auto kivalasztott)
-                        {
-                            var result = MessageBox.Show("Biztosan törölni szeretnéd ezt az autót?", "Megerősítés", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                            if (result == MessageBoxResult.Yes)
-                            {
-                                autok.Remove(kivalasztott);
-            
-                                // Újraírjuk a CSV fájlt
-                                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Data\autok.csv");
-                                using (StreamWriter sw = new StreamWriter(filePath, false, Encoding.UTF8))
-                                {
-                                    sw.WriteLine("id;marka;modell;ev;szin;db;ar"); // fejléc
-                                    foreach (var auto in autok)
-                                    {
-                                        string sor = $"{auto.Id1};{auto.Marka1};{auto.Modell1};{auto.Gyártásiev1};{auto.Szin1};{auto.EladottDb1};{auto.AvgEladasAr1}";
-                                        sw.WriteLine(sor);
-                                    }
-                                }
-            
-                                // UI frissítése
-                                AutoLista.ItemsSource = null;
-                                AutoLista.ItemsSource = autok;
-            
-                                MessageBox.Show("Autó sikeresen törölve!");
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Előbb válassz ki egy autót a törléshez!");
-                        }
-                    }
+                    AutoLista.Items.Refresh(); // UI frissítése
                 }
-            }</p>
-            <br>
-        <h3>UjAutoWindow.xaml.cs</h3>
-        <p>﻿using AutoLibrary;
-            using System;
-            using System.Collections.Generic;
-            using System.IO;
-            using System.Linq;
-            using System.Text;
-            using System.Threading.Tasks;
-            using System.Windows;
-            using System.Windows.Controls;
-            using System.Windows.Data;
-            using System.Windows.Documents;
-            using System.Windows.Input;
-            using System.Windows.Media;
-            using System.Windows.Media.Imaging;
-            using System.Windows.Shapes;
-            using Path = System.IO.Path;
-            
-            namespace autokGyakWPF
-            {
-                /// <summary>
-                /// Interaction logic for UjAutoWindow.xaml
-                /// </summary>
-                public partial class UjAutoWindow : Window
+                catch (Exception ex)
                 {
-                    public UjAutoWindow()
-                    {
-                        InitializeComponent();
-                    }
-            
-                    private void Mentés_Click(object sender, RoutedEventArgs e)
-                    {
-                        try
-                        {
-                            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Data\autok.csv");
-                            var autok = auto.OpenFiles(filePath);
-            
-                            int ujId = (autok.Count > 0) ? autok.Max(a => a.Id1) + 1 : 1;
-            
-                            auto uj = new auto(ujId, tbMarka.Text, tbModell.Text, int.Parse(tbEv.Text), tbSzin.Text, int.Parse(tbEladasDb.Text), int.Parse(tbAr.Text));
-                            // CSV-fájlhoz hozzáfűzés
-                            string sor = $"{uj.Id1};{uj.Marka1};{uj.Modell1};{uj.Gyártásiev1};{uj.Szin1};{uj.EladottDb1};{uj.AvgEladasAr1}";
-                            File.AppendAllText(filePath, Environment.NewLine + sor);
-            
-                            MessageBox.Show("Autó sikeresen hozzáadva!");
-                            this.Close();
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Hiba: " + ex.Message);
-                        }
-                    }
+                    MessageBox.Show("Hiba mentés közben: " + ex.Message);
                 }
-            }</p>
-            <br>
-            <h1>BASIC URLAP</h1>
-            <br>
-            <h3>index.html</h3>
-            <p>
-<!DOCTYPE html>
-<html lang="hu">
-<head>
-  <meta charset="UTF-8">
-  <title>Kódrészlet megjelenítése</title>
-</head>
-<body>
-  <h2>Kódrészlet (nem értelmezett HTML-ként):</h2>
-  <pre>
+            }
+            else
+            {
+                MessageBox.Show("Nincs kiválasztva autó a mentéshez!");
+            }
+        }
+            
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            if (AutoLista.SelectedItem is auto kivalasztott)
+            {
+                var result = MessageBox.Show("Biztosan törölni szeretnéd ezt az autót?", "Megerősítés", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    autok.Remove(kivalasztott);
+            
+                    // Újraírjuk a CSV fájlt
+                    string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Data\autok.csv");
+                    using (StreamWriter sw = new StreamWriter(filePath, false, Encoding.UTF8))
+                    {
+                        sw.WriteLine("id;marka;modell;ev;szin;db;ar"); // fejléc
+                        foreach (var auto in autok)
+                        {
+                            string sor = $"{auto.Id1};{auto.Marka1};{auto.Modell1};{auto.Gyártásiev1};{auto.Szin1};{auto.EladottDb1};{auto.AvgEladasAr1}";
+                            sw.WriteLine(sor);
+                        }
+                    }
+            
+                    // UI frissítése
+                    AutoLista.ItemsSource = null;
+                    AutoLista.ItemsSource = autok;
+            
+                    MessageBox.Show("Autó sikeresen törölve!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Előbb válassz ki egy autót a törléshez!");
+            }
+        }
+    }
+}
+    </pre>
+
+    <h3>UjAutoWindow.xaml.cs</h3>
+    <pre>
+using AutoLibrary;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using Path = System.IO.Path;
+            
+namespace autokGyakWPF
+{
+    /// &lt;summary&gt;
+    /// Interaction logic for UjAutoWindow.xaml
+    /// &lt;/summary&gt;
+    public partial class UjAutoWindow : Window
+    {
+        public UjAutoWindow()
+        {
+            InitializeComponent();
+        }
+            
+        private void Mentés_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Data\autok.csv");
+                var autok = auto.OpenFiles(filePath);
+            
+                int ujId = (autok.Count > 0) ? autok.Max(a => a.Id1) + 1 : 1;
+            
+                auto uj = new auto(ujId, tbMarka.Text, tbModell.Text, int.Parse(tbEv.Text), tbSzin.Text, int.Parse(tbEladasDb.Text), int.Parse(tbAr.Text));
+                // CSV-fájlhoz hozzáfűzés
+                string sor = $"{uj.Id1};{uj.Marka1};{uj.Modell1};{uj.Gyártásiev1};{uj.Szin1};{uj.EladottDb1};{uj.AvgEladasAr1}";
+                File.AppendAllText(filePath, Environment.NewLine + sor);
+            
+                MessageBox.Show("Autó sikeresen hozzáadva!");
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hiba: " + ex.Message);
+            }
+        }
+    }
+}
+    </pre>
+
+    <h1>BASIC URLAP</h1>
+    <h3>index.html</h3>
+    <pre>
 &lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
     &lt;head&gt;
@@ -369,13 +385,14 @@ namespace autokGyak
         &lt;script src="form.js"&gt;&lt;/script&gt;
     &lt;/body&gt;
 &lt;/html&gt;
-  </pre>
-</body>
-</html>
-</p>
-<br>
-<h3>form.js</h3>
-<p>let nextId = 1;
+  &lt;/pre&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+
+    <h3>form.js</h3>
+    <pre>
+let nextId = 1;
 
 function rendeles(event) {
     event.preventDefault();
@@ -404,11 +421,11 @@ function rendeles(event) {
         newRow.setAttribute("data-id", nextId);
         
         newRow.innerHTML = `
-            < td >${nextId}< /td >
-            < td >${inputvezeteknev.value}< /td >
-            < td >${inputkeresztnev.value}< /td >
-            < td >${inputemailcim.value}< /td >
-            < td >${inputtelefonszam.value}< /td >
+            &lt;td&gt;${nextId}&lt;/td&gt;
+            &lt;td&gt;${inputvezeteknev.value}&lt;/td&gt;
+            &lt;td&gt;${inputkeresztnev.value}&lt;/td&gt;
+            &lt;td&gt;${inputemailcim.value}&lt;/td&gt;
+            &lt;td&gt;${inputtelefonszam.value}&lt;/td&gt;
         `;
         
         tableBody.appendChild(newRow);
@@ -432,10 +449,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const tableBody = document.querySelector("tbody");
     tableBody.innerHTML = "";
 });
-</p>
-
-
-
-
+    </pre>
 </body>
 </html>
