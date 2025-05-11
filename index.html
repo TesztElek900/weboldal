@@ -24,10 +24,45 @@
             margin: 20px;
             line-height: 1.6;
         }
+        .navbar {
+            background-color: #333;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            z-index: 1000;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            transition: background-color 0.3s;
+        }
+        .navbar a:hover {
+            background-color: #555;
+        }
+        /* Add padding to the top of the page to account for the navbar */
+        #content {
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>autoGyak</h1>
+  <div class="navbar">
+        <a href="#autoGyak">autoGyak</a>
+        <a href="#AutoLibrary">AutoLibrary</a>
+        <a href="#autoGyakWPF">autoGyakWPF</a>
+        <a href="#BASIC_URLAP">BASIC URLAP</a>
+        <a href="#hasznalt_auto_webes_mysql">hasznalt_auto_webes_mysql</a>
+        <a href="#hasznalt_auto_webes_sqlite">hasznalt_auto_webes_sqlite</a>
+        <a href="#ConsoleHasznaltAuto">ConsoleHasznaltAuto</a>
+  </div>
+  <div id="content">
+    <h1 id="autoGyak">autoGyak</h1>
     <h3>Program.cs</h3>
     <pre>
 using System;
@@ -70,7 +105,7 @@ namespace autokGyak
 }
     </pre>
 
-    <h1>AutoLibrary</h1>
+    <h1 id="AutoLibrary">AutoLibrary</h1>
     <h3>auto.cs</h3>
     <pre>
 using System;
@@ -148,7 +183,7 @@ namespace AutoLibrary
 }
     </pre>
 
-    <h1>autoGyakWPF</h1>
+    <h1 id="autoGyakWPF">autoGyakWPF</h1>
     <h3>MainWindow.xaml.cs</h3>
     <pre>
 using System;
@@ -355,7 +390,7 @@ namespace autokGyakWPF
 }
     </pre>
 
-    <h1>BASIC URLAP</h1>
+    <h1 id="BASIC_URLAP">BASIC URLAP</h1>
     <h3>index.html</h3>
     <pre>
 &lt;!DOCTYPE html&gt;
@@ -451,7 +486,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
     </pre>
 
-<h1>hasznalt_auto_webes_mysql</h1>
+<h1 id="hasznalt_auto_webes_mysql">hasznalt_auto_webes_mysql</h1>
 <h3>index.html</h3>
 <pre>
 &lt;!DOCTYPE html&gt;
@@ -596,7 +631,7 @@ async function getAutok() {
 
 document.addEventListener('DOMContentLoaded', getAutok);
     </pre>
-    <h1>hasznalt_auto_webes_sqlite</h1>
+    <h1 id="hasznalt_auto_webes_sqlite">hasznalt_auto_webes_sqlite</h1>
     <h3>server.js</h3>
     <pre>
 //REST backend
@@ -712,5 +747,100 @@ app.listen(port, () => {
     console.log(`A szerver fut a ${port} számú porton`);
 });
     </pre>
+    <h1 id="ConsoleHasznaltAuto">ConsoleHasznaltAuto</h1>
+<h3>auto.cs</h3>
+<pre>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.InteropServices;
+
+namespace ConsoleHasznaltAuto
+{
+    class auto
+    {
+        int Id;
+        string Marka;
+        string Modell;
+        int Gyartasiev;
+        string Szin;
+        int EladottDb;
+        int AvgEladasAr;
+        
+        public auto(int id, string marka, string modell, int gyartasiev, string szin, int eladottDb, int avgEladasAr)
+        {
+            Id = id;
+            Marka = marka;
+            Modell = modell;
+            Gyartasiev = gyartasiev;
+            Szin = szin;
+            EladottDb = eladottDb;
+            AvgEladasAr = avgEladasAr;
+        }
+        
+        public int Id1 { get => Id; set => Id = value; }
+        public string Marka1 { get => Marka; set => Marka = value; }
+        public string Modell1 { get => Modell; set => Modell = value; }
+        public int Gyartasiev1 { get => Gyartasiev; set => Gyartasiev = value; }
+        public string Szin1 { get => Szin; set => Szin = value; }
+        public int EladottDb1 { get => EladottDb; set => EladottDb = value; }
+        public int AvgEladasAr1 { get => AvgEladasAr; set => AvgEladasAr = value; }
+        
+        public List&lt;auto&gt; OpenFiles(string filenev)
+        {
+            List&lt;auto&gt; autoList = new List&lt;auto&gt;();
+            string[] sorok = File.ReadAllLines(filenev);
+            for (int i = 1; i < sorok.Length; i++)
+            {
+                string[] mezok = sorok[i].Split(';');
+                //auto a = new auto(0, "", "", 0, "", 0, 0);
+                auto a = new auto(int.Parse(mezok[0]), mezok[1], mezok[2], int.Parse(mezok[3]), mezok[4], int.Parse(mezok[5]), int.Parse(mezok[6]));
+                autoList.Add(a);
+            }
+            return autoList;
+        }
+    }
+}
+</pre>
+<h3>Program.cs</h3>
+<pre>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleHasznaltAuto
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            auto a = new auto(0, "", "", 0, "", 0, 0);
+            foreach (auto arg in a.OpenFiles("autok.csv"))
+            {
+                Console.WriteLine(arg.Modell1);
+            }
+
+            string oldMarka = "";
+            int kor = a.OpenFiles("autok.csv")[0].Gyartasiev1;
+            foreach (auto arg in a.OpenFiles("autok.csv"))
+            {
+                if (arg.Gyartasiev1 < kor)
+                {
+                    kor = arg.Gyartasiev1;
+                    oldMarka = arg.Marka1;
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("{0} A legidősebb autó: {1}", kor, oldMarka);
+        }
+    }
+}
+</pre>
+</div>
 </body>
 </html>
