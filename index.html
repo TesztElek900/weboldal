@@ -49,17 +49,21 @@
         #content {
             padding-top: 10px;
         }
+        .red-bg {
+            background-color: rgba(255, 0, 0, 0.212);
+        }
     </style>
 </head>
 <body>
   <div class="navbar">
-        <a href="#autoGyak">autoGyak</a>
-        <a href="#AutoLibrary">AutoLibrary</a>
-        <a href="#autoGyakWPF">autoGyakWPF</a>
+        <a href="#autoGyak" class="red-bg">autoGyak</a>
+        <a href="#AutoLibrary" class="red-bg">AutoLibrary</a>
+        <a href="#autoGyakWPF" class="red-bg">autoGyakWPF</a>
         <a href="#BASIC_URLAP">BASIC URLAP</a>
         <a href="#hasznalt_auto_webes_mysql">hasznalt_auto_webes_mysql</a>
         <a href="#hasznalt_auto_webes_sqlite">hasznalt_auto_webes_sqlite</a>
         <a href="#ConsoleHasznaltAuto">ConsoleHasznaltAuto</a>
+        <a href="#Maraton">Maraton</a>
   </div>
   <div id="content">
     <h1 id="autoGyak">autoGyak</h1>
@@ -394,10 +398,10 @@ namespace autokGyakWPF
     <h3>index.html</h3>
     <pre>
 &lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;html lang=&quot;en&quot;&gt;
     &lt;head&gt;
-        &lt;meta charset="UTF-8"&gt;
-        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
         &lt;title&gt;Javascript - Űrlap adatok kezelése&lt;/title&gt;
         &lt;style&gt;
             .form-container {
@@ -414,16 +418,51 @@ namespace autokGyakWPF
         &lt;/style&gt;
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;div class="form-container"&gt;
-            ...
+        &lt;div class=&quot;form-container&quot;&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;Űrlap&lt;/legend&gt;
+                &lt;form action=&quot;&quot; id=&quot;userForm&quot;&gt;
+                    &lt;p&gt;
+                        &lt;label for=&quot;&quot;&gt;Vezetéknév:&lt;/label&gt;
+                        &lt;input type=&quot;text&quot; name=&quot;vezeteknev&quot; required placeholder=&quot;Vezetéknév megadása..&quot;&gt;
+                    &lt;/p&gt;
+                    &lt;p&gt;
+                        &lt;label for=&quot;&quot;&gt;Keresztnév:&lt;/label&gt;
+                        &lt;input type=&quot;text&quot; name=&quot;keresztnev&quot; required placeholder=&quot;Keresztnév megadása..&quot;&gt;
+                    &lt;/p&gt;
+                    &lt;p&gt;
+                        &lt;label for=&quot;&quot;&gt;Email:&lt;/label&gt;
+                        &lt;input type=&quot;email&quot; name=&quot;email&quot; required placeholder=&quot;Email megadása..&quot;&gt;
+                    &lt;/p&gt;
+                    &lt;p&gt;
+                        &lt;label for=&quot;&quot;&gt;Telefonszám:&lt;/label&gt;
+                        &lt;input type=&quot;tel&quot; name=&quot;telefonszam&quot; required placeholder=&quot;Telefonszám megadása..&quot;&gt;
+                    &lt;/p&gt;
+                    &lt;p&gt;
+                        &lt;button type=&quot;submit&quot;&gt;Elküld&lt;/button&gt;
+                    &lt;/p&gt;
+                &lt;/form&gt;
+            &lt;/fieldset&gt;
+            &lt;p&gt;
+                &lt;h3&gt;LocalStorage adatok megjelenítése&lt;/h3&gt;
+                &lt;table&gt;
+                    &lt;thead&gt;
+                        &lt;tr&gt;
+                            &lt;th&gt;Vezetéknév&lt;/th&gt;
+                            &lt;th&gt;Keresztnév&lt;/th&gt;
+                            &lt;th&gt;Email cím&lt;/th&gt;
+                            &lt;th&gt;Telefonszám&lt;/th&gt;
+                        &lt;/tr&gt;
+                    &lt;/thead&gt;
+                    &lt;tbody&gt;
+                    &lt;/tbody&gt;
+                &lt;/table&gt;
+            &lt;/p&gt;
         &lt;/div&gt;
-        &lt;script src="form.js"&gt;&lt;/script&gt;
+        &lt;script src=&quot;form.js&quot;&gt;&lt;/script&gt;
     &lt;/body&gt;
 &lt;/html&gt;
-  &lt;/pre&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-    </pre>
+</pre>
 
     <h3>form.js</h3>
     <pre>
@@ -820,6 +859,7 @@ namespace ConsoleHasznaltAuto
         static void Main(string[] args)
         {
             auto a = new auto(0, "", "", 0, "", 0, 0);
+            List&lt;auto&gt; autok = a.OpenFiles("autok.csv");
             foreach (auto arg in a.OpenFiles("autok.csv"))
             {
                 Console.WriteLine(arg.Modell1);
@@ -837,10 +877,212 @@ namespace ConsoleHasznaltAuto
             }
             Console.WriteLine();
             Console.WriteLine("{0} A legidősebb autó: {1}", kor, oldMarka);
+
+            int darabszam = autok.Count;
+            var AutokAtlagAr = autok
+            .Average(v => v.AvgEladasAr1);
+
+            Console.WriteLine($"\tÖsszes auto átlag ára: {(int)AutokAtlagAr}Ft");
+            Console.WriteLine($"\tÖsszes fajta auto: {darabszam}");
+
+            var osszesauto = autok
+            .Sum(v => v.EladottDb1);
+
+            Console.WriteLine($"\tÖsszes auto készleten: {osszesauto}");
+
+            var PirosAutoDb = autok
+            .Count(v => v.Szin1 == "Piros");
+            bool vanIlyen = autok.Any(v => v.Szin1 == "Piros");
+            if (vanIlyen)
+            {
+                Console.WriteLine("\tVan piros színű autó");
+            }
+            else
+            {
+                Console.WriteLine("\tNincs piros színű autó");
+            }
+
+            Console.WriteLine($"\tEnnyi piros autó van: {PirosAutoDb}");
+
+            string Legolcsobb = "";
+            int ar = a.OpenFiles("autok.csv")[0].AvgEladasAr1;
+            foreach (auto arg in a.OpenFiles("autok.csv"))
+            {
+                if (arg.AvgEladasAr1 < ar)
+                {
+                    ar = arg.AvgEladasAr1;
+                    Legolcsobb = arg.Marka1;
+                }
+            }
+            Console.WriteLine($"\tA legolcsóbb autó: {Legolcsobb}\t{ar}Ft");
+            
+
+
         }
     }
 }
+
 </pre>
+<h1 id="Maraton">Maraton</h1>
+  <h3>adatok.cs</h3>
+  <pre>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace Maraton
+{
+    class adatok
+    {
+        string Rajtszam;
+        string Kategoria;
+        string Nev;
+        string Egyesulet;
+        TimeSpan Ido;
+
+        public adatok(string rajtszam, string kategoria, string nev, string egyesulet, TimeSpan ido)
+        {
+            Rajtszam = rajtszam;
+            Kategoria = kategoria;
+            Nev = nev;
+            Egyesulet = egyesulet;
+            Ido = ido;
+        }
+
+        public string Rajtszam1 { get => Rajtszam; set => Rajtszam = value; }
+        public string Kategoria1 { get => Kategoria; set => Kategoria = value; }
+        public string Nev1 { get => Nev; set => Nev = value; }
+        public string Egyesulet1 { get => Egyesulet; set => Egyesulet = value; }
+        public TimeSpan Ido1 { get => Ido; set => Ido = value; }
+
+        public List&lt;adatok&gt; OpenFiles(string filenev)
+        {
+            List&lt;adatok&gt; maratonList = new List&lt;adatok&gt;();
+            string[] sorok = File.ReadAllLines(filenev);
+            for (int i = 1; i < sorok.Length; i++)
+            {
+                string[] mezok = sorok[i].Split(';');
+                //auto a = new auto(0, "", "", 0, "", 0, 0);
+                adatok a = new adatok(mezok[0], mezok[1], mezok[2], mezok[3], TimeSpan.Parse(mezok[4]));
+                maratonList.Add(a);
+            }
+            return maratonList;
+        }
+    }
+}
+  </pre>
+  <h3>Versenytav.cs</h3>
+  <pre>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Maraton
+{
+    class Versenytav
+    {
+        private string Rajtszam;
+        public string Tav
+        {
+            get
+            {
+                switch (Rajtszam[0])
+                {
+                    case 'M': return "Mini";
+                    case 'R': return "Rövid";
+                    case 'K': return "Közép";
+                    case 'H': return "Hosszú";
+                    case 'E': return "Pedelec";
+                }
+                return "Hibás rajtszám";
+            }
+        }
+        public Versenytav(string rajtszam)
+        {
+            Rajtszam = rajtszam;
+        }
+    }
+}
+  </pre>
+  <h3>Program.cs</h3>
+  <pre>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace Maraton
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            
+            adatok a = new adatok("", "", "", "", TimeSpan.Zero);
+            List&lt;adatok&gt; versenyzok = a.OpenFiles("bukkm2019.txt");
+            int osszesIndulo = 691;
+            int celbaErkezettek = versenyzok.Count;
+            double NemTeljesítők = osszesIndulo - celbaErkezettek;
+            double szazalek = NemTeljesítők / osszesIndulo * 100;
+            Console.WriteLine($"4. feladat: Versenytávot nem teljesítők: {szazalek}%");
+
+            int rovidtavNok = versenyzok.Count(v =>
+            {
+                Versenytav tav = new Versenytav(v.Rajtszam1);
+                return tav.Tav == "Rövid" && v.Kategoria1.EndsWith("n");
+            });
+            Console.WriteLine($"5. feladat: Rövidtávú női versenyzők száma: {rovidtavNok} fő");
+
+            bool voltIlyen = versenyzok.Any(v => v.Ido1 > TimeSpan.FromHours(6));
+            if (voltIlyen)
+            {
+                Console.WriteLine("6. feladat: Volt ilyen versenyző");
+            }
+            else
+            {
+                Console.WriteLine("6. feladat: Nem volt ilyen versenyző");
+            }
+
+            var rovidFelnottFerfiak = versenyzok
+            .Where(v => new Versenytav(v.Rajtszam1).Tav == "Rövid" && v.Kategoria1 == "ff")
+            .ToList();
+
+            var gyoztes = rovidFelnottFerfiak
+                .OrderBy(v => v.Ido1)
+                .First();
+
+            Console.WriteLine("7. feladat: A felnőtt férfi (ff) kategória győztese rövidtávon:");
+            Console.WriteLine($"\tRajtszám: {gyoztes.Rajtszam1}");
+            Console.WriteLine($"\tNév: {gyoztes.Nev1}");
+            if (!string.IsNullOrWhiteSpace(gyoztes.Egyesulet1))
+            {
+                Console.WriteLine($"\tEgyesület: {gyoztes.Egyesulet1}");
+            }
+            Console.WriteLine($"\tIdő: {gyoztes.Ido1}");
+
+            var ferfiVersenyzok = versenyzok
+            .Where(v => v.Kategoria1.EndsWith("f"));
+
+            var statisztika = ferfiVersenyzok
+                .GroupBy(v => v.Kategoria1)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            Console.WriteLine("8. feladat: Férfi versenyzők statisztikája kategóriánként:");
+            foreach (var sor in statisztika)
+            {
+                Console.WriteLine($"\t{sor.Key} - {sor.Value} fő");
+            }
+        }
+    }
+}
+  </pre>
 </div>
 </body>
 </html>
