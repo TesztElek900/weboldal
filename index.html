@@ -64,6 +64,7 @@
         <a href="#hasznalt_auto_webes_sqlite">hasznalt_auto_webes_sqlite</a>
         <a href="#ConsoleHasznaltAuto">ConsoleHasznaltAuto</a>
         <a href="#Maraton">Maraton</a>
+        <a href="#WPFHasznaltAuto">WPF_HasznaltAuto</a>
   </div>
   <div id="content">
     <h1 id="autoGyak">autoGyak</h1>
@@ -1083,6 +1084,432 @@ namespace Maraton
     }
 }
   </pre>
+  <h1 id="WPFHasznaltAuto">WPF_HasznaltAuto</h1>
+<h3>MainWindow.xaml</h3>
+<pre>
+&lt;Window x:Class="HasznaltAutoWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HasznaltAutoWPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"&gt;
+    &lt;!-- Itt a stílus rész --&gt;
+    &lt;Window.Resources&gt;
+        &lt;Style TargetType="Button"&gt;
+            &lt;Setter Property="Background" Value="#FF4C72AF"/&gt;
+            &lt;Setter Property="Foreground" Value="White"/&gt;
+            &lt;Setter Property="BorderBrush"  Value="#FF4C72AF"/&gt;
+            &lt;Setter Property="FontWeight" Value="Bold"/&gt;
+            &lt;Setter Property="Padding" Value="8,4"/&gt;
+            &lt;Setter Property="Template"&gt;
+                &lt;Setter.Value&gt;
+                    &lt;ControlTemplate TargetType="Button"&gt;
+                        &lt;Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="15"&gt;
+                            &lt;ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/&gt;
+                        &lt;/Border&gt;
+                    &lt;/ControlTemplate&gt;
+                &lt;/Setter.Value&gt;
+            &lt;/Setter&gt;
+        &lt;/Style&gt;
+    &lt;/Window.Resources&gt;
+    &lt;!-- Gombok és egyéb elemek --&gt;
+    &lt;Grid&gt;
+        &lt;Grid.Background&gt;
+            &lt;LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0"&gt;
+                &lt;GradientStop Color="#FFC4DEE0" Offset="0.337"/&gt;
+                &lt;GradientStop Color="#FF37595B" Offset="0"/&gt;
+            &lt;/LinearGradientBrush&gt;
+        &lt;/Grid.Background&gt;
+        &lt;DataGrid x:Name="AutoDataGrid" AutoGenerateColumns="True" Margin="0,144,0,10"/&gt;
+        &lt;Button Content="Számol" HorizontalAlignment="Left" Margin="366,51,0,0" VerticalAlignment="Top" Click="Button_Click" Height="38" Width="108"/&gt;
+        &lt;TextBox x:Name="OraMennyiseg" HorizontalAlignment="Left" Margin="208,61,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/&gt;
+        &lt;Label Content="Hány órára bérelnéd az autót?" HorizontalAlignment="Left" Margin="33,57,0,0" VerticalAlignment="Top" Foreground="White"/&gt;
+        &lt;Button Content="Szerkesztés" HorizontalAlignment="Left" Margin="698,70,0,0" VerticalAlignment="Top" Height="60" Width="72" Click="Button_Click_1"/&gt;
+        &lt;Button Content="Új auto" HorizontalAlignment="Left" Margin="698,10,0,0" VerticalAlignment="Top" Height="55" Width="72" Click="Button_Click_2"/&gt;
+    &lt;/Grid&gt;
+&lt;/Window&gt;
+</pre>
+<h3>MainWindow.xaml.cs</h3>
+<pre>
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using MySql.Data.MySqlClient;
+
+namespace HasznaltAutoWPF
+{
+    /// &lt;summary&gt;
+    /// Interaction logic for MainWindow.xaml
+    /// &lt;/summary&gt;
+    public partial class MainWindow : Window
+    {
+        private string connectionString = "server=localhost;user=rootee;password=jelszo;database=auto_nyilvantartas";
+        
+        public MainWindow()
+        {
+            InitializeComponent();
+            LoadAutok();
+        }
+        
+        private void LoadAutok()
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = @"SELECT a.azonosito, a.nev, a.ar, a.szin, a.felvetel_datum, k.nev AS kategoria
+                                     FROM autok a
+                                     LEFT JOIN kategoriak k ON a.kategoria_id = k.id";
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(query, conn);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    AutoDataGrid.ItemsSource = dt.DefaultView;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hiba történt az adatok betöltése közben: " + ex.Message);
+            }
+        }
+        
+        private decimal SzamolBerlesiDij(decimal oradij, int bereltOrak)
+        {
+            return oradij * bereltOrak;
+        }
+        
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (AutoDataGrid.SelectedItem is DataRowView selectedRow)
+            {
+                decimal oraDij = Convert.ToDecimal(selectedRow["ar"]);
+                int bereltOrak = int.Parse(OraMennyiseg.Text); // Ez lehetne egy TextBoxból is beolvasva
+                decimal fizetendo = SzamolBerlesiDij(oraDij, bereltOrak);
+                MessageBox.Show($"A fizetendő összeg {bereltOrak} órára: {fizetendo} Ft");
+            }
+            else
+            {
+                MessageBox.Show("Kérlek válassz ki egy autót a listából!");
+            }
+        }
+        
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Szerkeszto ujAblak = new Szerkeszto();
+            ujAblak.Show();
+            LoadAutok();
+            Close();
+        }
+        
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            UjAuto ujauto = new UjAuto();
+            ujauto.Show();
+            Close();
+        }
+    }
+}
+</pre>
+<h3>Szerkeszto.xaml</h3>
+<pre>
+&lt;Window x:Class="HasznaltAutoWPF.Szerkeszto"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HasznaltAutoWPF"
+        mc:Ignorable="d"
+        Title="Szerkeszto" Height="450" Width="800"&gt;
+    &lt;Grid&gt;
+        &lt;DataGrid x:Name="AutoDataGrid" AutoGenerateColumns="True" Margin="0,217,0,10" SelectionChanged="AutoDataGrid_SelectionChanged"/&gt;
+        &lt;TextBox x:Name="NevBox" HorizontalAlignment="Left" Margin="164,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/&gt;
+        &lt;TextBox x:Name="ArBox" HorizontalAlignment="Left" Margin="164,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/&gt;
+        &lt;TextBox x:Name="SzinBox" HorizontalAlignment="Left" Margin="164,140,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/&gt;
+        &lt;Label Content="Név" HorizontalAlignment="Left" Margin="124,56,0,0" VerticalAlignment="Top"/&gt;
+        &lt;Label Content="Ár" HorizontalAlignment="Left" Margin="133,96,0,0" VerticalAlignment="Top"/&gt;
+        &lt;Label Content="Szín" HorizontalAlignment="Left" Margin="124,136,0,0" VerticalAlignment="Top"/&gt;
+        &lt;Button Content="Mentés" HorizontalAlignment="Left" Margin="486,80,0,0" VerticalAlignment="Top" Height="49" Width="89" Click="Button_Click"/&gt;
+        &lt;Button Content="Vissza" HorizontalAlignment="Left" Margin="486,149,0,0" VerticalAlignment="Top" Height="38" Width="89" Click="Button_Click_1"/&gt;
+    &lt;/Grid&gt;
+&lt;/Window&gt;
+</pre>
+<h3>Szerkeszto.xaml.cs</h3>
+<pre>
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using MySql.Data.MySqlClient;
+
+namespace HasznaltAutoWPF
+{
+    /// &lt;summary&gt;
+    /// Interaction logic for Szerkeszto.xaml
+    /// &lt;/summary&gt;
+    public partial class Szerkeszto : Window
+    {
+        private string connectionString = "server=localhost;user=rootee;password=jelszo;database=auto_nyilvantartas";
+        
+        public Szerkeszto()
+        {
+            InitializeComponent();
+            LoadAutok();
+        }
+        
+        private void LoadAutok()
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = @"SELECT a.azonosito, a.nev, a.ar, a.szin, a.felvetel_datum, k.nev AS kategoria
+                                     FROM autok a
+                                     LEFT JOIN kategoriak k ON a.kategoria_id = k.id";
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(query, conn);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    AutoDataGrid.ItemsSource = dt.DefaultView;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hiba történt az adatok betöltése közben: " + ex.Message);
+            }
+        }
+        
+        private void AutoDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (AutoDataGrid.SelectedItem is DataRowView selectedRow)
+            {
+                NevBox.Text = selectedRow["nev"].ToString();
+                ArBox.Text = selectedRow["ar"].ToString();
+                SzinBox.Text = selectedRow["szin"].ToString();
+            }
+        }
+        
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (AutoDataGrid.SelectedItem is DataRowView selectedRow)
+            {
+                string azonosito = selectedRow["azonosito"].ToString();
+                string ujNev = NevBox.Text;
+                decimal ujAr;
+                string ujSzin = SzinBox.Text;
+                
+                if (!decimal.TryParse(ArBox.Text, out ujAr))
+                {
+                    MessageBox.Show("Érvénytelen ár!");
+                    return;
+                }
+                
+                try
+                {
+                    using (MySqlConnection conn = new MySqlConnection(connectionString))
+                    {
+                        conn.Open();
+                        string updateQuery = @"UPDATE autok SET nev = @nev, ar = @ar, szin = @szin WHERE azonosito = @id";
+                        using (MySqlCommand cmd = new MySqlCommand(updateQuery, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@nev", ujNev);
+                            cmd.Parameters.AddWithValue("@ar", ujAr);
+                            cmd.Parameters.AddWithValue("@szin", ujSzin);
+                            cmd.Parameters.AddWithValue("@id", azonosito);
+                            
+                            int sorok = cmd.ExecuteNonQuery();
+                            if (sorok > 0)
+                            {
+                                MessageBox.Show("Sikeres módosítás!");
+                                LoadAutok();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Nem sikerült frissíteni az adatokat.");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Hiba történt mentés közben: " + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Válassz ki egy sort a táblázatból!");
+            }
+        }
+        
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainoldal = new MainWindow();
+            mainoldal.Show();
+            LoadAutok();
+            Close();
+        }
+    }
+}
+</pre>
+<h3>UjAuto.xaml</h3>
+<pre>
+&lt;Window x:Class="HasznaltAutoWPF.UjAuto"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HasznaltAutoWPF"
+        mc:Ignorable="d"
+        Title="UjAuto" Height="450" Width="800"&gt;
+    &lt;Grid Margin="10"&gt;
+        &lt;Grid.RowDefinitions&gt;
+            &lt;RowDefinition Height="Auto"/&gt;
+            &lt;RowDefinition Height="Auto"/&gt;
+            &lt;RowDefinition Height="Auto"/&gt;
+            &lt;RowDefinition Height="Auto"/&gt;
+            &lt;RowDefinition Height="Auto"/&gt;
+            &lt;RowDefinition Height="Auto"/&gt;
+            &lt;RowDefinition Height="*"/&gt;
+        &lt;/Grid.RowDefinitions&gt;
+        &lt;Label Content="Azonosító:" Grid.Row="0"/&gt;
+        &lt;TextBox x:Name="AzonositoTextBox" Grid.Row="0" Margin="100,0,0,5"/&gt;
+        &lt;Label Content="Név:" Grid.Row="1"/&gt;
+        &lt;TextBox x:Name="NevTextBox" Grid.Row="1" Margin="100,0,0,5"/&gt;
+        &lt;Label Content="Ár (Ft/óra):" Grid.Row="2"/&gt;
+        &lt;TextBox x:Name="ArTextBox" Grid.Row="2" Margin="100,0,0,5"/&gt;
+        &lt;Label Content="Kategória:" Grid.Row="3"/&gt;
+        &lt;ComboBox x:Name="KategoriaComboBox" Grid.Row="3" Margin="100,0,0,5"&gt;
+            &lt;ComboBoxItem&gt;Lassú jármű&lt;/ComboBoxItem&gt;
+            &lt;ComboBoxItem&gt;Személyautó&lt;/ComboBoxItem&gt;
+            &lt;ComboBoxItem&gt;Teherautó&lt;/ComboBoxItem&gt;
+        &lt;/ComboBox&gt;
+        &lt;Label Content="Szín:" Grid.Row="4"/&gt;
+        &lt;TextBox x:Name="SzinTextBox" Grid.Row="4" Margin="100,0,0,5"/&gt;
+        &lt;Button Content="Mentés" Grid.Row="5" Margin="0,10,0,0" Click="MentesButton_Click"/&gt;
+    &lt;/Grid&gt;
+&lt;/Window&gt;
+</pre>
+<h3>UjAuto.xaml.cs</h3>
+<pre>
+using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace HasznaltAutoWPF
+{
+    /// &lt;summary&gt;
+    /// Interaction logic for UjAuto.xaml
+    /// &lt;/summary&gt;
+    public partial class UjAuto : Window
+    {
+        public UjAuto()
+        {
+            InitializeComponent();
+        }
+        
+        private void MentesButton_Click(object sender, RoutedEventArgs e)
+        {
+            string azonosito = AzonositoTextBox.Text;
+            string nev = NevTextBox.Text;
+            string szin = SzinTextBox.Text;
+            decimal ar;
+            
+            if (!decimal.TryParse(ArTextBox.Text, out ar))
+            {
+                MessageBox.Show("Az ár mezőben számot adj meg!");
+                return;
+            }
+            
+            if (KategoriaComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                string kategoriaNev = selectedItem.Content.ToString();
+                try
+                {
+                    string connectionString = "server=localhost;user=rootee;password=jelszo;database=auto_nyilvantartas";
+                    using (MySqlConnection conn = new MySqlConnection(connectionString))
+                    {
+                        conn.Open();
+                        string getKatIdQuery = "SELECT id FROM kategoriak WHERE nev = @nev LIMIT 1";
+                        MySqlCommand getKatCmd = new MySqlCommand(getKatIdQuery, conn);
+                        getKatCmd.Parameters.AddWithValue("@nev", kategoriaNev);
+                        object result = getKatCmd.ExecuteScalar();
+                        
+                        if (result == null)
+                        {
+                            MessageBox.Show("A kiválasztott kategória nem létezik az adatbázisban.");
+                            return;
+                        }
+                        
+                        int kategoriaId = Convert.ToInt32(result);
+                        
+                        string insertQuery = @"INSERT INTO autok (azonosito, nev, ar, szin, kategoria_id, felvetel_datum)
+                                       VALUES (@azonosito, @nev, @ar, @szin, @kategoria_id, NOW())";
+                        MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn);
+                        insertCmd.Parameters.AddWithValue("@azonosito", azonosito);
+                        insertCmd.Parameters.AddWithValue("@nev", nev);
+                        insertCmd.Parameters.AddWithValue("@ar", ar);
+                        insertCmd.Parameters.AddWithValue("@szin", szin);
+                        insertCmd.Parameters.AddWithValue("@kategoria_id", kategoriaId);
+                        
+                        insertCmd.ExecuteNonQuery();
+                        
+                        MessageBox.Show("Sikeres mentés!");
+                        MainWindow mainoldal = new MainWindow();
+                        mainoldal.Show();
+                        Close();
+                        this.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Hiba történt: " + ex.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Válassz ki egy kategóriát!");
+            }
+        }
+    }
+}
+</pre>
 </div>
 </body>
 </html>
