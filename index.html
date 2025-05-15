@@ -399,132 +399,195 @@ namespace autokGyakWPF
     <h3>index.html</h3>
     <pre>
 &lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot;&gt;
-    &lt;head&gt;
-        &lt;meta charset=&quot;UTF-8&quot;&gt;
-        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        &lt;title&gt;Javascript - Űrlap adatok kezelése&lt;/title&gt;
-        &lt;style&gt;
-            .form-container {
-                width: 400px;
-                margin-left: auto;
-                margin-right: auto;
-                margin-top: 50px;
-            }
-            table, th, td {
-                border: 1px solid black;
-                border-collapse: collapse;
-                padding: 5px 10px;
-            }
-        &lt;/style&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;div class=&quot;form-container&quot;&gt;
-            &lt;fieldset&gt;
-                &lt;legend&gt;Űrlap&lt;/legend&gt;
-                &lt;form action=&quot;&quot; id=&quot;userForm&quot;&gt;
-                    &lt;p&gt;
-                        &lt;label for=&quot;&quot;&gt;Vezetéknév:&lt;/label&gt;
-                        &lt;input type=&quot;text&quot; name=&quot;vezeteknev&quot; required placeholder=&quot;Vezetéknév megadása..&quot;&gt;
-                    &lt;/p&gt;
-                    &lt;p&gt;
-                        &lt;label for=&quot;&quot;&gt;Keresztnév:&lt;/label&gt;
-                        &lt;input type=&quot;text&quot; name=&quot;keresztnev&quot; required placeholder=&quot;Keresztnév megadása..&quot;&gt;
-                    &lt;/p&gt;
-                    &lt;p&gt;
-                        &lt;label for=&quot;&quot;&gt;Email:&lt;/label&gt;
-                        &lt;input type=&quot;email&quot; name=&quot;email&quot; required placeholder=&quot;Email megadása..&quot;&gt;
-                    &lt;/p&gt;
-                    &lt;p&gt;
-                        &lt;label for=&quot;&quot;&gt;Telefonszám:&lt;/label&gt;
-                        &lt;input type=&quot;tel&quot; name=&quot;telefonszam&quot; required placeholder=&quot;Telefonszám megadása..&quot;&gt;
-                    &lt;/p&gt;
-                    &lt;p&gt;
-                        &lt;button type=&quot;submit&quot;&gt;Elküld&lt;/button&gt;
-                    &lt;/p&gt;
-                &lt;/form&gt;
-            &lt;/fieldset&gt;
-            &lt;p&gt;
-                &lt;h3&gt;LocalStorage adatok megjelenítése&lt;/h3&gt;
-                &lt;table&gt;
-                    &lt;thead&gt;
-                        &lt;tr&gt;
-                            &lt;th&gt;Vezetéknév&lt;/th&gt;
-                            &lt;th&gt;Keresztnév&lt;/th&gt;
-                            &lt;th&gt;Email cím&lt;/th&gt;
-                            &lt;th&gt;Telefonszám&lt;/th&gt;
-                        &lt;/tr&gt;
-                    &lt;/thead&gt;
-                    &lt;tbody&gt;
-                    &lt;/tbody&gt;
-                &lt;/table&gt;
-            &lt;/p&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+    &lt;script src="main.js"&gt;&lt;/script&gt;
+    &lt;title&gt;Hotel Tropical&lt;/title&gt;
+    &lt;style&gt;
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body style="background-color: white;"&gt;
+    &lt;a name="ide"&gt;&lt;/a&gt;
+    &lt;nav class="navbar navbar-expand-lg navbar-dark bg-dark"&gt;
+        &lt;div class="container-fluid"&gt;
+            &lt;button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"&gt;
+                &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
+            &lt;/button&gt;
+            &lt;div class="collapse navbar-collapse" id="navbarNav"&gt;
+                &lt;ul class="navbar-nav"&gt;
+                    &lt;li class="nav-item"&gt;
+                        &lt;a class="nav-link" href="index.html"&gt;Kezdőlap&lt;/a&gt;
+                    &lt;/li&gt;
+                    &lt;li class="nav-item"&gt;
+                        &lt;a class="nav-link text-warning" href="order.html"&gt;Szállásfoglalás&lt;/a&gt;
+                    &lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/div&gt;
         &lt;/div&gt;
-        &lt;script src=&quot;form.js&quot;&gt;&lt;/script&gt;
-    &lt;/body&gt;
+    &lt;/nav&gt;
+    &lt;div class="container mt-5"&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-6 text-center text-white text-bg-info rounded"&gt;
+                &lt;h1&gt;Szállásfoglalás&lt;/h1&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="row mt-5"&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-6 text-body text-bg-light pt-5 pb-0"&gt;
+                &lt;h3&gt;Szállásfoglaló adatai&lt;/h3&gt;
+                &lt;p&gt;&lt;span class="userError text-danger"&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3 text-body text-bg-light"&gt;
+                &lt;div class="mb-3 mt-3"&gt;
+                    &lt;label for="vnev" class="form-label"&gt;Vezetéknév&lt;/label&gt;
+                    &lt;input type="text" class="form-control" id="inputLastName" name="inputlastname" placeholder="Vezetéknév..." required&gt;
+                &lt;/div&gt;
+                &lt;div class="mb-3"&gt;
+                    &lt;label for="email" class="form-label"&gt;Email cím&lt;/label&gt;
+                    &lt;input type="email" class="form-control" id="inputEmail" name="inputemail"  placeholder="Email cím..." required&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3 text-body text-bg-light"&gt;
+                &lt;div class="mb-3 mt-3"&gt;
+                    &lt;label for="knev" class="form-label"&gt;Keresztnév&lt;/label&gt;
+                    &lt;input type="text" class="form-control" id="inputFirstName" name="inputfirstname" placeholder="Keresztnév..." required&gt;
+                &lt;/div&gt;
+                &lt;div class="mb-3"&gt;
+                    &lt;label for="telefonszam" class="form-label"&gt;Telefonszám&lt;/label&gt;
+                    &lt;input type="tel" class="form-control" id="inputPhone" name="inputphone" placeholder="Telefonszám..." required&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-6 text-body text-bg-light"&gt;
+                &lt;h3&gt;Lakcím&lt;/h3&gt;
+                &lt;p&gt;&lt;span class="addressError text-danger"&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3 text-body text-bg-light"&gt;
+                &lt;div class="mb-3"&gt;
+                    &lt;label for="telepules" class="form-label"&gt;Település&lt;/label&gt;
+                    &lt;input type="text" class="form-control" id="inputCity" name="inputcity" placeholder="Település..." required&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3 text-body text-bg-light"&gt;
+                &lt;div class="mb-3"&gt;
+                    &lt;label for="utcahazszam" class="form-label"&gt;Utca/házszám&lt;/label&gt;
+                    &lt;input type="text" class="form-control" id="inputAddress" name="inputaddress" placeholder="Utca/házszám..." required&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-6 text-body text-bg-light pb-3"&gt;
+                &lt;h3&gt;Szállásfoglalás&lt;/h3&gt;
+                &lt;p&gt;&lt;span class="orderError text-danger"&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3 text-body text-bg-light"&gt;
+                &lt;div class="mb-3"&gt;
+                    &lt;select id="selectRoom" class="form-select"&gt;
+                      &lt;option selected&gt;Válassz szoba típust&lt;/option&gt;
+                      &lt;option&gt;Egy ágyas szoba&lt;/option&gt;
+                      &lt;option&gt;Franciaágyas szoba&lt;/option&gt;
+                      &lt;option&gt;Családi lakosztály&lt;/option&gt;
+                    &lt;/select&gt;
+                &lt;/div&gt;
+                &lt;div class="mb-3"&gt;
+                    &lt;label for="erkezes" class="form-label"&gt;Érkezés&lt;/label&gt;
+                    &lt;input type="date" class="form-control" placeholder="éééé.hh.nn." name="inputerkezes" required&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3 text-body text-bg-light"&gt;
+                &lt;div class="mb-3"&gt;
+                    &lt;select id="selectService" class="form-select"&gt;
+                      &lt;option selected&gt;Válassz ellátást&lt;/option&gt;
+                      &lt;option&gt;Nincs ellátás&lt;/option&gt;
+                      &lt;option&gt;B & B&lt;/option&gt;
+                      &lt;option&gt;Félpanzió&lt;/option&gt;
+                      &lt;option&gt;All inclusive&lt;/option&gt;
+                    &lt;/select&gt;
+                &lt;/div&gt;
+                &lt;div class="mb-3"&gt;
+                    &lt;label for="tavozas" class="form-label"&gt;Távozás&lt;/label&gt;
+                    &lt;input type="date" class="form-control" placeholder="éééé.hh.nn." name="inputtavozas" required&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-6 text-body text-bg-light"&gt;
+                &lt;label for="tavozas" class="form-label" id="comment"&gt;Megjegyzés&lt;/label&gt;
+                &lt;div class="form-floating"&gt;
+                    &lt;textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" name="inputmegjegyzes"&gt;&lt;/textarea&gt;
+                    &lt;label for="floatingTextarea"&gt;Egyéb kérések...&lt;/label&gt;
+                  &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="row"&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-6 text-body text-bg-light" style="padding-bottom: 100px; padding-top: 15px;"&gt;
+                &lt;div class="btn-group" role="group" aria-label="Basic example"&gt;
+                    &lt;button type="button" class="btn btn-info text-white" onclick="calcAmount()"&gt;Megrendelés&lt;/button&gt;
+                    &lt;button type="button" class="btn btn-danger" onclick="reset()"&gt;Törlés&lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="col-12 col-md-3"&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="container mt-5"&gt;
+        &lt;p class="mt-3"&gt;&lt;a href="#ide" class="text-body" style="text-decoration: none;"&gt;Vissza a lap tetejére&lt;/a&gt;&lt;/p&gt;
+        &lt;div class="row mt-3 mb-3"&gt;
+            &lt;div class="col-12 footer-copyright-wrapper text-center text-white border border-white bg-warning"&gt;
+                &lt;h3&gt;Hotel Tropical Weboldal&lt;br&gt;&lt;/h3&gt;
+                &lt;h6&gt;&copy; 2024 Minden jog fenntartva! &lt;/h6&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"&gt;&lt;/script&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
 &lt;/html&gt;
-</pre>
-
-    <h3>form.js</h3>
-    <pre>
-let nextId = 1;
-
-function rendeles(event) {
-    event.preventDefault();
-    
-    let inputvezeteknev = document.querySelector("input[name='vezeteknev']");
-    let inputkeresztnev = document.querySelector("input[name='keresztnev']");
-    let inputemailcim = document.querySelector("input[name='email']");
-    let inputtelefonszam = document.querySelector("input[name='telefonszam']");
-    
-    let megrendeloError = document.getElementById("megrendeloError");
-    if (!megrendeloError) {
-        megrendeloError = document.createElement("div");
-        megrendeloError.id = "megrendeloError";
-        megrendeloError.style.color = "red";
-        document.getElementById("userForm").appendChild(megrendeloError);
-    }
-
-    if(inputvezeteknev.value == "" || inputkeresztnev.value == "" || inputemailcim.value == "" || inputtelefonszam.value == "") {
-        megrendeloError.innerHTML = "Hiányzó felhasználói adatok!";
-    } 
-    else {
-        const tableBody = document.querySelector("tbody");
-        
-        const newRow = document.createElement("tr");
-        
-        newRow.setAttribute("data-id", nextId);
-        
-        newRow.innerHTML = `
-            &lt;td&gt;${nextId}&lt;/td&gt;
-            &lt;td&gt;${inputvezeteknev.value}&lt;/td&gt;
-            &lt;td&gt;${inputkeresztnev.value}&lt;/td&gt;
-            &lt;td&gt;${inputemailcim.value}&lt;/td&gt;
-            &lt;td&gt;${inputtelefonszam.value}&lt;/td&gt;
-        `;
-        
-        tableBody.appendChild(newRow);
-        
-        nextId++;
-
-        document.getElementById("userForm").reset();
-        
-        megrendeloError.innerHTML = "";
-    }
-}
-document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById("userForm");
-    form.addEventListener("submit", rendeles);
-    
-    const headerRow = document.querySelector("thead tr");
-    const idHeader = document.createElement("th");
-    idHeader.textContent = "ID";
-    headerRow.insertBefore(idHeader, headerRow.firstChild);
-    
-    const tableBody = document.querySelector("tbody");
-    tableBody.innerHTML = "";
-});
     </pre>
+
 
 <h1 id="hasznalt_auto_webes_mysql">hasznalt_auto_webes_mysql</h1>
 <h3>index.html</h3>
